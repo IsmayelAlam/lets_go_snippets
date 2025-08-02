@@ -9,10 +9,12 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"lets_go.snippetbox.ismayel/internal/models"
 )
 
 type application struct {
-	logger *slog.Logger
+	logger   *slog.Logger
+	snippets *models.SnippetModel
 }
 
 func main() {
@@ -23,16 +25,17 @@ func main() {
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
-	app := &application{
-		logger: logger,
-	}
-
 	db, err := openDB(*dsn)
 	if err != nil {
 		logger.Error("failed to connect to database", slog.String("dsn", *dsn), slog.String("error", err.Error()))
 		os.Exit(1)
 	}
 	defer db.Close()
+
+	app := &application{
+		logger:   logger,
+		snippets: &models.SnippetModel{DB: db},
+	}
 
 	logger.Info("starting server", slog.String("port", addrStr))
 
