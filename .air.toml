@@ -3,7 +3,7 @@ testdata_dir = "testdata"
 tmp_dir = "tmp"
 
 [build]
-  args_bin = ['-addr=8000']
+  args_bin = ['-addr=8000','-dsn="web:password@/snippetbox?parseTime=true"']
   bin = "./tmp/main"
   cmd = 'go build -o ./tmp/main ./cmd/web/.'
   delay = 1000
