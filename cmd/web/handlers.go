@@ -1,13 +1,26 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
+
+	"lets_go.snippetbox.ismayel/internal/models"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
+	snippets, err := app.snippets.Latest()
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	for _, snippet := range snippets {
+		app.logger.Info(snippet.Title)
+	}
+
 	files := []string{
 		"./ui/html/base.html",
 		"./ui/html/partials/nav.html",
@@ -23,14 +36,27 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil || id <= 0 {
 		http.NotFound(w, r)
 		return
 	}
-	fmt.Fprintf(w, "Display a specific snippet: %d", id)
+
+	snippet, err := app.snippets.Get(id)
+
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			http.NotFound(w, r)
+		} else {
+			app.serverError(w, r, err)
+		}
+		return
+	}
+	fmt.Fprintf(w, "%+v", snippet)
 }
+
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Display a form for creating a new snippet..."))
 }
