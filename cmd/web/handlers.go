@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strconv"
 
@@ -17,25 +16,8 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/base.html",
-		"./ui/html/partials/nav.html",
-		"./ui/html/pages/home.html",
-	}
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, r, err)
-		return
-	}
+	app.render(w, r, http.StatusOK, "home.html", templateData{Snippets: snippets})
 
-	data := templateData{
-		Snippets: snippets,
-	}
-
-	if err = ts.ExecuteTemplate(w, "base", data); err != nil {
-		app.serverError(w, r, err)
-		return
-	}
 }
 
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
@@ -55,23 +37,8 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	data := templateData{
-		Snippet: snippet,
-	}
-	files := []string{
-		"./ui/html/base.html",
-		"./ui/html/partials/nav.html",
-		"./ui/html/pages/view.html",
-	}
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, r, err)
-		return
-	}
+	app.render(w, r, http.StatusOK, "view.html", templateData{Snippet: snippet})
 
-	if err = ts.ExecuteTemplate(w, "base", data); err != nil {
-		app.serverError(w, r, err)
-	}
 }
 
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
@@ -89,7 +56,4 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 	}
 
 	http.Redirect(w, r, fmt.Sprintf("/snippet/view/%d", id), http.StatusSeeOther)
-	// w.Header().Set("Location", "/snippet/view/1")
-	// w.WriteHeader(http.StatusCreated)
-	// w.Write([]byte("Create a new snippet..."))
 }
