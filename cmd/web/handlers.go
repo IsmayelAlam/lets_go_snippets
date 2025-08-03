@@ -17,10 +17,6 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, snippet := range snippets {
-		app.logger.Info(snippet.Title)
-	}
-
 	files := []string{
 		"./ui/html/base.html",
 		"./ui/html/partials/nav.html",
@@ -31,7 +27,12 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 		return
 	}
-	if err = ts.ExecuteTemplate(w, "base", nil); err != nil {
+
+	data := templateData{
+		Snippets: snippets,
+	}
+
+	if err = ts.ExecuteTemplate(w, "base", data); err != nil {
 		app.serverError(w, r, err)
 		return
 	}
