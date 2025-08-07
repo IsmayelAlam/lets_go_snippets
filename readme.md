@@ -10,9 +10,9 @@ Welcome to the practice repository for the book **[Let's Go](https://lets-go.ale
 - Working with HTML templates
 - Sessions and cookies
 - User authentication
-- Using PostgreSQL with Go
+- Using MySQL with Go
 - Secure password handling
-- Deploying applications
+- Testing
 
 > The book emphasizes writing clean, idiomatic, and secure Go code, and uses a hands-on, project-based approach to teach you web development.
 
