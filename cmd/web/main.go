@@ -62,7 +62,9 @@ func main() {
 		sessionManager: sessionManager,
 	}
 
-	logger.Info("starting server", slog.String("port", addrStr))
+	startLog := fmt.Sprintf("starting server https://localhost:%d", *addr)
+
+	logger.Info(startLog)
 
 	tlsConfig := &tls.Config{
 		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
