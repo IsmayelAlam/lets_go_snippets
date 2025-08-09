@@ -31,7 +31,6 @@ This table lists all HTTP routes used in the "Let's Go" web application.
 | GET    | /user/login        | Show login form                    | Public        | ✅      |
 | POST   | /user/login        | Process login                      | Public        | ✅      |
 | POST   | /user/logout       | Log out the user                   | Authenticated | ✅      |
-| GET    | /ping              | Healthcheck endpoint               | Internal/Test | ❌      |
 | GET    | /static/\*filepath | Serve static files (CSS, JS, etc.) | Public        | ✅      |
 
 > Note:
@@ -39,3 +38,5 @@ This table lists all HTTP routes used in the "Let's Go" web application.
 > - `:id` is a placeholder for the snippet ID (e.g., `/snippet/view/1`)
 > - Authenticated routes require a user to be logged in
 > - Static files are typically served under `/static/`
+
+<!-- go run "$(go env GOROOT)/src/crypto/tls/generate_cert.go" --rsa-bits=2048 --host=localhost       -->
